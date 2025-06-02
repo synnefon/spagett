@@ -1,18 +1,15 @@
-(max
-  name
-  duration_seconds
+
+(map
   (join
-    (== user_id id)
+    (< 300 (+ age duration_seconds))
     (map
       (get users)
-      (if
-        (> age 25)
-        (list *)
-      )
+      (list *)
     )
     (map 
       (get roleplays)
       (list user_id completed duration_seconds)
     )
   )
+  (list (+ age duration_seconds) user_id email)
 )

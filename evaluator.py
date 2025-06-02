@@ -34,8 +34,8 @@ def list_op(expr, context):
     if not isinstance(context, dict):
         print("ERROR: filter expects a dict. instead got: \n" + str(context))
         sys.exit(1)
-    keys = context.keys() if expr[1] == "*" else expr[1:]
-    return {e: eval_expr(e, context) for e in keys}
+    members = context.keys() if expr[1] == "*" else expr[1:]
+    return {str(m): eval_expr(m, context) for m in members}
 
 
 def map_op(expr, context):
@@ -76,22 +76,14 @@ def join_op(expr, context):
     return joined
 
 
-def make_math_op(operation):
-    def math_op(expr, context):
+def make_binary_op(operation, return_type="str"):
+    def binary_op(expr, context):
         left = float(eval_expr(expr[1], context))
         right = float(eval_expr(expr[2], context))
-        return str(operation(left, right))
+        result = operation(left, right)
+        return str(result) if return_type == "str" else result
 
-    return math_op
-
-
-def make_bool_op(operation):
-    def bool_op(expr, context):
-        left = float(eval_expr(expr[1], context))
-        right = float(eval_expr(expr[2], context))
-        return operation(left, right)
-
-    return bool_op
+    return binary_op
 
 
 def and_op(expr, context):
@@ -132,16 +124,16 @@ op_funs = {
     "==": {"op": equals_op, "arg_range": 2},
     "!=": {"op": not_equals_op, "arg_range": 2},
     "if": {"op": if_op, "arg_range": [2, 3]},
-    "+": {"op": make_math_op(operator.add), "arg_range": 2},
-    "-": {"op": make_math_op(operator.sub), "arg_range": 2},
-    "*": {"op":  make_math_op(operator.mul), "arg_range": 2},
-    "/": {"op": make_math_op(operator.truediv), "arg_range": 2},
-    "//": {"op": make_math_op(operator.floordiv), "arg_range": 2},
-    "**": {"op": make_math_op(operator.pow), "arg_range": 2},
-    "<": {"op": make_bool_op(operator.lt), "arg_range": 2},
-    ">": {"op": make_bool_op(operator.gt), "arg_range": 2},
-    ">=": {"op": make_bool_op(operator.ge), "arg_range": 2},
-    "<=": {"op": make_bool_op(operator.le), "arg_range": 2},
+    "+": {"op": make_binary_op(operator.add, "str"), "arg_range": 2},
+    "-": {"op": make_binary_op(operator.sub, "str"), "arg_range": 2},
+    "*": {"op": make_binary_op(operator.mul, "str"), "arg_range": 2},
+    "/": {"op": make_binary_op(operator.truediv, "str"), "arg_range": 2},
+    "//": {"op": make_binary_op(operator.floordiv, "str"), "arg_range": 2},
+    "**": {"op": make_binary_op(operator.pow, "str"), "arg_range": 2},
+    "<": {"op": make_binary_op(operator.lt, "bool"), "arg_range": 2},
+    ">": {"op": make_binary_op(operator.gt, "bool"), "arg_range": 2},
+    ">=": {"op": make_binary_op(operator.ge, "bool"), "arg_range": 2},
+    "<=": {"op": make_binary_op(operator.le, "bool"), "arg_range": 2},
     "and": {"op": and_op, "arg_range": [2, float('inf')]},
     "or": {"op": or_op, "arg_range": [2, float('inf')]},
 }

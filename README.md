@@ -1,0 +1,2 @@
+# spagett
+Spagett Query Language

@@ -39,11 +39,13 @@ def list_op(expr, context):
 
 
 def map_op(expr, context):
-    if not isinstance(context, list):
-        print("map expects a list. instead got: \n" + str(context))
+    sub_query = expr[1]
+    data = eval_expr(sub_query, context)
+    if not isinstance(data, list):
+        print("map expects a list. instead got: \n" + str(data))
         sys.exit(1)
-    cond = expr[1]
-    matches = [eval_expr(cond, c) for c in context]
+    cond = expr[2]
+    matches = [eval_expr(cond, row) for row in data]
     return [m for m in matches if m is not None]
 
 
@@ -120,9 +122,9 @@ def get_op(expr, context):
 
 
 op_funs = {
-    "get": {"op": get_op, "arg_range": [1, 2]},
+    "get": {"op": get_op, "arg_range": 1},
     "list": {"op": list_op, "arg_range": [1, float('inf')]},
-    "map": {"op": map_op, "arg_range": 1},
+    "map": {"op": map_op, "arg_range": 2},
     "join": {"op": join_op, "arg_range": 3},
     "sum": {"op": make_aggregate_op("sum"), "arg_range": 3},
     "max": {"op": make_aggregate_op("max"), "arg_range": 3},

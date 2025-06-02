@@ -23,9 +23,9 @@ python spagett_it.py your_query_file.🍝
 
 | **Operator**        | **Args**                                                                  | **Example**                                                                                         | **Explanation**                                                                                                                                                                                                                                     |
 |---------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `get`              | `source` [, `sub-expression`]                                             | `(get users)`                                                                                       | Gets the full `users` table; can optionally pass a sub-expression.                                                                                                                                                                                  |
+| `get`              | `source`                                             | `(get users)`                                                                                       | Gets the full `users` table                                                                                                                                                                               |
 | `list`             | `field1`, `field2`, ... or `*`                                            | `(list user_id completed)`                                                                          | Pulls only the `user_id` and `completed` fields from a record. `(list *)` would pull all fields.                                                                                                                                                   |
-| `map`             | `sub-expression`                                                          | `(map (list user_id completed))`                                                                    | Maps each record in the list to just the `user_id` and `completed` fields.                                                                                                                                                                         |
+| `map`             | `sub-expression` `formatting-expression`                                                          | `(map (get users) (list user_id completed))`                                                                    | Maps each record in the users table to a list to just the `user_id` and `completed` fields.                                                                                                                                                                         |
 | `join`             | `condition`, `left`, `right`                                              | `(join (== user_id id) (get users) (get roleplays))`                                                | Joins `users` and `roleplays` where `user_id` matches `id`.                                                                                                                                                                                       |
 | `sum`              | `group_by_field`, `sum_field`, `sub-expression`                                   | `(sum name duration_seconds (join ...))`                                                            | Sums `duration_seconds` grouped by `name` across joined data.                                                                                                                                                                                      |
 | `max`              | `group_by_field`, `max_field`, `sub-expression`                                   | `(max name duration_seconds (join ...))`                                                            | Finds the max `duration_seconds` per `name` across joined data.                                                                                                                                                                                    |
@@ -42,7 +42,7 @@ python spagett_it.py your_query_file.🍝
 
 #### Get & Map
 ```lisp
-(get users (map (list id name)))
+(map (get users) (list id name))
 ```
 → Get users table, and pull out just the id and name fields.
 
@@ -65,18 +65,16 @@ python spagett_it.py your_query_file.🍝
   duration_seconds
   (join
     (== user_id id)
-    (get users
-      (map
-        (if
-          (> age 25)
-          (list *)
-        )
+    (map
+      (get users)
+      (if
+        (> age 25)
+        (list *)
       )
     )
-    (get roleplays 
-      (map 
-        (list user_id completed duration_seconds)
-      )
+    (map 
+      (get roleplays)
+      (list user_id completed duration_seconds)
     )
   )
 )

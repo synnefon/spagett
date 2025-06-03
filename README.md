@@ -60,26 +60,30 @@ python spagett_it.py your_query_file.🍝
 
 #### Join Tables
 ```lisp
-(max
-  name
-  duration_seconds
+(min
+  (list name roleplay_id)
+  performance
   (join
-    (== user_id id)
-    (map
-      (get users)
-      (if
-        (> age 25)
+    (== oid roleplay_id)
+    (join
+      (== user_id id)
+      (map
+        (get users)
+        (list *)
+      )
+      (map 
+        (get roleplays)
         (list *)
       )
     )
-    (map 
-      (get roleplays)
-      (list user_id completed duration_seconds)
+    (map
+      (get ratings)
+      (list performance roleplay_id)
     )
   )
 )
 ```
-→ get the max duration_seconds from users table joined with roleplays table
+→ get the min performance rating from users table joined with roleplays table, for each name and roleplay pair
 
 ## 🏗️ Contributing
 Want to help shape the most noodly query language on Earth?

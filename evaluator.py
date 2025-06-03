@@ -3,7 +3,7 @@ import sys
 
 
 def aggregate_op(expr, context, mode):
-    op_for = expr[1]
+    ops_for = [expr[1]] if isinstance(expr[1], str) else eval_expr(expr[1], context)
     op_on = expr[2]
     data = eval_expr(expr[3], context)
     result = {}
@@ -13,17 +13,26 @@ def aggregate_op(expr, context, mode):
             print(f"{op_on} must be numeric for use in {mode} function")
             sys.exit(1)
 
+        key = tuple(d[op_for] for op_for in ops_for)
+
         if mode == "max":
-            result[d[op_for]] = max(result.get(d[op_for], d[op_on] - 1), d[op_on])
+            result[key] = max(result.get(key, d[op_on] - 1), d[op_on])
         elif mode == "min":
-            result[d[op_for]] = min(result.get(d[op_for], d[op_on] + 1), d[op_on])
+            result[key] = min(result.get(key, d[op_on] + 1), d[op_on])
         elif mode == "sum":
-            result[d[op_for]] = result.get(d[op_for], 0) + d[op_on]
+            result[key] = result.get(key, 0) + d[op_on]
         else:
             print(f"Unknown mode: {mode}")
             sys.exit(1)
 
-    return [{op_for: key, op_on: value} for key, value in result.items()]
+    # Build output: include all keys from original dicts, plus aggregated value
+    output = []
+    for keys, value in result.items():
+        combined = {op_for: key_part for op_for, key_part in zip(ops_for, keys)}
+        combined[f"{mode} {op_on}"] = value
+        output.append(combined)
+
+    return output
 
 
 def make_aggregate_op(mode):
@@ -114,6 +123,7 @@ def get_op(expr, context):
 
 
 op_funs = {
+    # sub-queries
     "get": {"op": get_op, "arg_range": 1},
     "list": {"op": list_op, "arg_range": [1, float('inf')]},
     "map": {"op": map_op, "arg_range": 2},
@@ -121,9 +131,12 @@ op_funs = {
     "sum": {"op": make_aggregate_op("sum"), "arg_range": 3},
     "max": {"op": make_aggregate_op("max"), "arg_range": 3},
     "min": {"op": make_aggregate_op("min"), "arg_range": 3},
+    # pure operators
     "==": {"op": equals_op, "arg_range": 2},
     "!=": {"op": not_equals_op, "arg_range": 2},
     "if": {"op": if_op, "arg_range": [2, 3]},
+    "and": {"op": and_op, "arg_range": [2, float('inf')]},
+    "or": {"op": or_op, "arg_range": [2, float('inf')]},
     "+": {"op": make_binary_op(operator.add, "str"), "arg_range": 2},
     "-": {"op": make_binary_op(operator.sub, "str"), "arg_range": 2},
     "*": {"op": make_binary_op(operator.mul, "str"), "arg_range": 2},
@@ -134,8 +147,6 @@ op_funs = {
     ">": {"op": make_binary_op(operator.gt, "bool"), "arg_range": 2},
     ">=": {"op": make_binary_op(operator.ge, "bool"), "arg_range": 2},
     "<=": {"op": make_binary_op(operator.le, "bool"), "arg_range": 2},
-    "and": {"op": and_op, "arg_range": [2, float('inf')]},
-    "or": {"op": or_op, "arg_range": [2, float('inf')]},
 }
 
 

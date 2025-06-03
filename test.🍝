@@ -1,15 +1,23 @@
 
-(map
+(min
+  (list name roleplay_id)
+  performance
   (join
-    (< 300 (+ age duration_seconds))
-    (map
-      (get users)
-      (list *)
+    (== oid roleplay_id)
+    (join
+      (== user_id id)
+      (map
+        (get users)
+        (list *)
+      )
+      (map 
+        (get roleplays)
+        (list *)
+      )
     )
-    (map 
-      (get roleplays)
-      (list user_id completed duration_seconds)
+    (map
+      (get ratings)
+      (list performance roleplay_id)
     )
   )
-  (list (+ age duration_seconds) user_id email)
 )

@@ -69,12 +69,9 @@ python spagett_it.py your_query_file.🍝
       (== user_id id)
       (map
         (get users)
-        (list *)
+        (list name id)
       )
-      (map 
-        (get roleplays)
-        (list *)
-      )
+      (get roleplays)
     )
     (map
       (get ratings)

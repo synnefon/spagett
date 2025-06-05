@@ -60,7 +60,9 @@ def map_op(expr, context):
 
 def make_order_op(type):
     def order_op(expr, context):
-        order_by = [expr[1]] if isinstance(expr[1], str) else eval_expr(expr[1], context)
+        order_by = (
+            [expr[1]] if isinstance(expr[1], str) else eval_expr(expr[1], context)
+        )
         data = eval_expr(expr[2], context)
 
         reverse = type == "desc"
@@ -70,6 +72,7 @@ def make_order_op(type):
             return data
         except Exception as e:
             raise Exception(f"ERROR: failed to order by {order_by} ({type}): {e}")
+
     return order_op
 
 
@@ -156,7 +159,7 @@ op_funs = {
     "max": {"op": make_aggregate_op("max"), "arg_range": 3},
     "min": {"op": make_aggregate_op("min"), "arg_range": 3},
     "filter": {"op": filter_op, "arg_range": 2},
-    "ascending":  {"op": make_order_op("asc"), "arg_range": 2},
+    "ascending": {"op": make_order_op("asc"), "arg_range": 2},
     "descending": {"op": make_order_op("desc"), "arg_range": 2},
     # pure operators
     "==": {"op": equals_op, "arg_range": 2},

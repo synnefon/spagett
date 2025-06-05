@@ -1,8 +1,5 @@
 import operator
 
-# order asc, desc
-# map --> select
-
 
 def aggregate_op(expr, context, mode):
     ops_for = [expr[1]] if isinstance(expr[1], str) else eval_expr(expr[1], context)
@@ -56,9 +53,24 @@ def map_op(expr, context):
     data = eval_expr(expr[1], context)
     if not isinstance(data, list):
         raise Exception("map expects a list. instead got: \n" + str(data))
-    cond = expr[2]
-    matches = [eval_expr(cond, row) for row in data]
-    return [m for m in matches if m is not None]
+    format = expr[2]
+    formatted = [eval_expr(format, row) for row in data]
+    return [f for f in formatted if f is not None]
+
+
+def make_order_op(type):
+    def order_op(expr, context):
+        order_by = [expr[1]] if isinstance(expr[1], str) else eval_expr(expr[1], context)
+        data = eval_expr(expr[2], context)
+
+        reverse = type == "desc"
+
+        try:
+            data.sort(key=lambda x: tuple(x.get(k) for k in order_by), reverse=reverse)
+            return data
+        except Exception as e:
+            raise Exception(f"ERROR: failed to order by {order_by} ({type}): {e}")
+    return order_op
 
 
 def filter_op(expr, context):
@@ -92,6 +104,7 @@ def limit_op(expr, context):
         raise Exception(f"ERROR: failed to parse limiter {limit}")
     data = eval_expr(expr[2], context)
     return data[:limit]
+
 
 def make_binary_op(operation, return_type="str"):
     def binary_op(expr, context):
@@ -143,6 +156,8 @@ op_funs = {
     "max": {"op": make_aggregate_op("max"), "arg_range": 3},
     "min": {"op": make_aggregate_op("min"), "arg_range": 3},
     "filter": {"op": filter_op, "arg_range": 2},
+    "ascending":  {"op": make_order_op("asc"), "arg_range": 2},
+    "descending": {"op": make_order_op("desc"), "arg_range": 2},
     # pure operators
     "==": {"op": equals_op, "arg_range": 2},
     "!=": {"op": not_equals_op, "arg_range": 2},

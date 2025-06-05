@@ -10,8 +10,7 @@ def aggregate_op(expr, context, mode):
 
     for d in data:
         if not isinstance(d[op_on], (float, int)):
-            print(f"{op_on} must be numeric for use in {mode} function")
-            sys.exit(1)
+            raise Exception(f"{op_on} must be numeric for use in {mode} function")
 
         key = tuple(d[op_for] for op_for in ops_for)
 
@@ -22,8 +21,7 @@ def aggregate_op(expr, context, mode):
         elif mode == "sum":
             result[key] = result.get(key, 0) + d[op_on]
         else:
-            print(f"Unknown mode: {mode}")
-            sys.exit(1)
+            raise Exception(f"Unknown mode: {mode}")
 
     # Build output: include all keys from original dicts, plus aggregated value
     output = []
@@ -41,8 +39,7 @@ def make_aggregate_op(mode):
 
 def list_op(expr, context):
     if not isinstance(context, dict):
-        print("ERROR: filter expects a dict. instead got: \n" + str(context))
-        sys.exit(1)
+        raise Exception("ERROR: filter expects a dict. instead got: \n" + str(context))
     members = context.keys() if expr[1] == "*" else expr[1:]
     return {str(m): eval_expr(m, context) for m in members}
 
@@ -51,8 +48,7 @@ def map_op(expr, context):
     sub_query = expr[1]
     data = eval_expr(sub_query, context)
     if not isinstance(data, list):
-        print("map expects a list. instead got: \n" + str(data))
-        sys.exit(1)
+        raise Exception("map expects a list. instead got: \n" + str(data))
     cond = expr[2]
     matches = [eval_expr(cond, row) for row in data]
     return [m for m in matches if m is not None]
@@ -76,8 +72,7 @@ def join_op(expr, context):
         for right in right_data:
             if any(key in right for key in left):
                 clash_keys = [key for key in left if key in right]
-                print(f"ERROR: clashing keys! {', '.join(clash_keys)}")
-                sys.exit(1)
+                raise Exception(f"ERROR: clashing keys! {', '.join(clash_keys)}")
             merged = {**left, **right}
             if eval_expr(join_cond, merged):
                 joined.append(merged)
@@ -158,20 +153,17 @@ def eval_expr(expr, context={}):
     op = expr[0]
     op_info = op_funs.get(op, False)
     if not op_info:
-        print("operator not found: '" + op + "'")
-        sys.exit(1)
+        raise Exception("operator not found: '" + op + "'")
     
     arg_range = op_info["arg_range"]
     n_args = len(expr[1:])
 
     if isinstance(arg_range, int):
         if n_args != arg_range:
-            print(f"ERROR: {op} accepts exactly {arg_range} arguments. Received {n_args}")
-            sys.exit(1)
+            raise Exception(f"ERROR: {op} accepts exactly {arg_range} arguments. Received {n_args}")
     else:
         min_args, max_args = arg_range
         if not (min_args <= n_args <= max_args):
-            print(f"ERROR: {op} accepts between {min_args} and {max_args} arguments. Received {n_args}")
-            sys.exit(1)
+            raise Exception(f"ERROR: {op} accepts between {min_args} and {max_args} arguments. Received {n_args}")
 
     return op_info["op"](expr, context)

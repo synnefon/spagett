@@ -1,8 +1,7 @@
 # Improved table printer with headers and alignment
-def print_table(data):
+def printable_table(data):
     if not data:
-        print("(empty)")
-        return
+        return "(empty)"
 
     def format_row(row, widths):
         return " | ".join(str(cell).ljust(widths[i]) for i, cell in enumerate(row))
@@ -20,9 +19,10 @@ def print_table(data):
     widths = [
         max(len(str(h)), *(len(r[i]) for r in rows)) for i, h in enumerate(headers)
     ]
-    print()
-    print(format_row(headers, widths))
-    print("-+-".join("-" * w for w in widths))
+    ret = "\n" + format_row(headers, widths)
+    ret += "\n" + "-+-".join("-" * w for w in widths)
     for row in rows:
-        print(format_row(row, widths))
-    print()
+        ret += "\n" + format_row(row, widths)
+    ret += "\n"
+
+    return ret

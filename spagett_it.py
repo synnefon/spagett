@@ -1,7 +1,7 @@
 from tables import data_sources
 from parser import parse
 from tokenizer import tokenize
-from printer import print_table
+from printer import printable_table
 from evaluator import eval_expr
 
 
@@ -13,13 +13,15 @@ def load_spagett_file(filename):
         return f.read()
 
 
-# Main runner
 def run_spagett(filename):
-    code = load_spagett_file(filename)
-    tokens = tokenize(code)
-    ast = parse(tokens)
-    result = eval_expr(ast, data_sources)
-    print_table(result)
+    try:
+        code = load_spagett_file(filename)
+        tokens = tokenize(code)
+        ast = parse(tokens)
+        result = eval_expr(ast, data_sources)
+        return {"body": printable_table(result), "success": True}
+    except Exception as e:
+        return {"body": "\n".join(e.args), "success": False}
 
 
 if __name__ == "__main__":
@@ -28,4 +30,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python spagett.py <file.🍝>")
     else:
-        run_spagett(sys.argv[1])
+        noodles = run_spagett(sys.argv[1])
+        if not noodles["success"]:
+            print("\nSpagett Failed...\n")
+        print(noodles["body"], "\n")

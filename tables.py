@@ -13,7 +13,7 @@ data_sources = {
         {"oid": 104, "user_id": 4, "completed": True, "duration_seconds": 200},
         {"oid": 105, "user_id": 3, "completed": False, "duration_seconds": 200},
     ],
-    "ratings": [
+    "evaluations": [
         {"rid": 200, "roleplay_id": 100, "performance": 3},
         {"rid": 201, "roleplay_id": 101, "performance": 9},
         {"rid": 202, "roleplay_id": 102, "performance": 4},

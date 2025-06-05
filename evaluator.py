@@ -1,5 +1,7 @@
 import operator
-import sys
+
+# order asc, desc
+# map --> select
 
 
 def aggregate_op(expr, context, mode):
@@ -9,7 +11,7 @@ def aggregate_op(expr, context, mode):
     result = {}
 
     for d in data:
-        if not isinstance(d[op_on], (float, int)):
+        if op_on != "" and not isinstance(d[op_on], (float, int)):
             raise Exception(f"{op_on} must be numeric for use in {mode} function")
 
         key = tuple(d[op_for] for op_for in ops_for)
@@ -20,9 +22,10 @@ def aggregate_op(expr, context, mode):
             result[key] = min(result.get(key, d[op_on] + 1), d[op_on])
         elif mode == "sum":
             result[key] = result.get(key, 0) + d[op_on]
+        elif mode == "count":
+            result[key] = result.get(key, 0) + 1
         else:
             raise Exception(f"Unknown mode: {mode}")
-
     # Build output: include all keys from original dicts, plus aggregated value
     output = []
     for keys, value in result.items():
@@ -31,6 +34,11 @@ def aggregate_op(expr, context, mode):
         output.append(combined)
 
     return output
+
+
+def count_op(expr, context):
+    dummy_expr = expr[:2] + [""] + [expr[2]]
+    return aggregate_op(dummy_expr, context, "count")
 
 
 def make_aggregate_op(mode):
@@ -76,6 +84,15 @@ def join_op(expr, context):
     return joined
 
 
+def limit_op(expr, context):
+    limit = None
+    try:
+        limit = int(float(eval_expr(expr[1], context)))
+    except:
+        raise Exception(f"ERROR: failed to parse limiter {limit}")
+    data = eval_expr(expr[2], context)
+    return data[:limit]
+
 def make_binary_op(operation, return_type="str"):
     def binary_op(expr, context):
         left = float(eval_expr(expr[1], context))
@@ -118,11 +135,14 @@ op_funs = {
     "get": {"op": get_op, "arg_range": 1},
     "list": {"op": list_op, "arg_range": [1, float("inf")]},
     "map": {"op": map_op, "arg_range": 2},
-    "filter": {"op": filter_op, "arg_range": 2},
     "join": {"op": join_op, "arg_range": 3},
+    "limit": {"op": limit_op, "arg_range": 2},
+    #
+    "count": {"op": count_op, "arg_range": 2},
     "sum": {"op": make_aggregate_op("sum"), "arg_range": 3},
     "max": {"op": make_aggregate_op("max"), "arg_range": 3},
     "min": {"op": make_aggregate_op("min"), "arg_range": 3},
+    "filter": {"op": filter_op, "arg_range": 2},
     # pure operators
     "==": {"op": equals_op, "arg_range": 2},
     "!=": {"op": not_equals_op, "arg_range": 2},

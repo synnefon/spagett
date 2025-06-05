@@ -1,23 +1,5 @@
 
-(min
-  (list name roleplay_id)
-  performance
-  (join
-    (== oid roleplay_id)
-    (filter
-      (== user_id 2)
-      (join
-        (== user_id id)
-        (map
-          (get users)
-          (list name id)
-        )
-        (get roleplays)
-      )
-    )
-    (map
-      (get ratings)
-      (list performance roleplay_id)
-    )
-  )
+(count
+  roleplay_id
+  (get evaluations)
 )

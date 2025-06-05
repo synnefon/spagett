@@ -8,33 +8,41 @@ def aggregate_op(expr, context, mode):
     op_on = expr[2]
     data = eval_expr(expr[3], context)
     result = {}
+    counts = {}
 
     for d in data:
-        if op_on != "" and not isinstance(d[op_on], (float, int)):
-            raise Exception(f"{op_on} must be numeric for use in {mode} function")
-
         key = tuple(d[op_for] for op_for in ops_for)
 
+        if mode in {"sum", "avg", "max", "min"} and not isinstance(
+            d[op_on], (float, int)
+        ):
+            raise Exception(f"{op_on} must be numeric for use in {mode} function")
+
+        val = d.get(op_on, 1)
+
         if mode == "max":
-            result[key] = max(result.get(key, d[op_on] - 1), d[op_on])
+            result[key] = max(result.get(key, val - 1), val)
         elif mode == "min":
-            result[key] = min(result.get(key, d[op_on] + 1), d[op_on])
-        elif mode == "sum":
-            result[key] = result.get(key, 0) + d[op_on]
-        elif mode == "avg":
-            result[key] = result.get(key, 0) + (d[op_on] / len(data))
+            result[key] = min(result.get(key, val + 1), val)
+        elif mode in {"sum", "avg"}:
+            result[key] = result.get(key, 0) + val
+            counts[key] = counts.get(key, 0) + 1
         elif mode == "count":
             result[key] = result.get(key, 0) + 1
         else:
             raise Exception(f"Unknown mode: {mode}")
-    # Build output: include all keys from original dicts, plus aggregated value
-    output = []
-    for keys, value in result.items():
-        combined = {op_for: key_part for op_for, key_part in zip(ops_for, keys)}
-        combined[f"{op_on if op_on != "" else mode}"] = value
-        output.append(combined)
 
-    return output
+    if mode == "avg":
+        for key in result:
+            result[key] /= counts[key]
+
+    return [
+        {
+            **{op_for: k for op_for, k in zip(ops_for, key)},
+            (op_on if mode != "count" else "count"): val,
+        }
+        for key, val in result.items()
+    ]
 
 
 def count_op(expr, context):

@@ -40,9 +40,10 @@ python spagett_it.py your_query_file.🍝
 ### 📊 Aggregations
 | **Operator** | **Args**                      | **Example**                                     | **What It Does**                 |
 | ------------ | ----------------------------- | ----------------------------------------------- | -------------------------------- |
-| `sum`        | `group-by`, `group-on`, `sub-expression` | `(sum (list email roleplay_id) duration_seconds (join ...))` | Sums group-on field(s) for each distinct group-by field(s). |
-| `max`        | `group-on`, `group-on`, `sub-expression` | `(max name duration_seconds (join ...))`        | Finds max value of group-by field(s) for each distinct group-by field(s).       |
-| `min`        | `group-by`, `group-on`, `sub-expression` | `(min name duration_seconds (join ...))`        | Finds min value of group-on field(s) for each distinct group-by field(s).       |
+| `sum`        | `group-by`, `group-on`, `sub-expression` | `(sum (list email roleplay_id) duration_seconds (join ...))` | Sums group-on field for each distinct group-by field(s). |
+| `max`        | `group-on`, `group-on`, `sub-expression` | `(max name duration_seconds (join ...))`        | Finds max value of group-on field for each distinct group-by field(s).       |
+| `min`        | `group-by`, `group-on`, `sub-expression` | `(min name duration_seconds (join ...))`        | Finds min value of group-on field for each distinct group-by field(s).       |
+| `avg`        | `group-by`, `group-on`, `sub-expression` | `(avg name duration_seconds (join ...))`        | Finds average value of group-on field for each distinct group-by field(s).       |
 | `count`       | `group-by`, `sub-expression`        | `(count email (get users))`                          | Counts the number of records for each distinct value of the group-by field(s). |
 
 ### 🧮 Expressions

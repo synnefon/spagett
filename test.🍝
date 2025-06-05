@@ -1,9 +1,20 @@
 
-(descending
-  max-performance
-  (max
-    eid
+(
+  limit 5
+  (descending
     performance
-    (get evaluations)
+    (avg
+      (list user_id name)
+      performance
+      (join
+        (== uid user_id)
+        (get users)
+        (join
+          (== rid roleplay_id)
+          (get roleplays)
+          (get evaluations)
+        )
+      )
+    )
   )
 )

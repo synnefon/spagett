@@ -20,6 +20,8 @@ def aggregate_op(expr, context, mode):
             result[key] = min(result.get(key, d[op_on] + 1), d[op_on])
         elif mode == "sum":
             result[key] = result.get(key, 0) + d[op_on]
+        elif mode == "avg":
+            result[key] = result.get(key, 0) + (d[op_on] / len(data))
         elif mode == "count":
             result[key] = result.get(key, 0) + 1
         else:
@@ -28,7 +30,7 @@ def aggregate_op(expr, context, mode):
     output = []
     for keys, value in result.items():
         combined = {op_for: key_part for op_for, key_part in zip(ops_for, keys)}
-        combined[f"{mode}-{op_on}"] = value
+        combined[f"{op_on if op_on != "" else mode}"] = value
         output.append(combined)
 
     return output
@@ -159,6 +161,7 @@ op_funs = {
     "sum": {"op": make_aggregate_op("sum"), "arg_range": 3},
     "max": {"op": make_aggregate_op("max"), "arg_range": 3},
     "min": {"op": make_aggregate_op("min"), "arg_range": 3},
+    "avg": {"op": make_aggregate_op("avg"), "arg_range": 3},
     "filter": {"op": filter_op, "arg_range": 2},
     "ascending": {"op": make_order_op("asc"), "arg_range": 2},
     "descending": {"op": make_order_op("desc"), "arg_range": 2},

@@ -4,13 +4,16 @@
   performance
   (join
     (== oid roleplay_id)
-    (join
-      (== user_id id)
-      (map
-        (get users)
-        (list name id)
+    (filter
+      (== user_id 2)
+      (join
+        (== user_id id)
+        (map
+          (get users)
+          (list name id)
+        )
+        (get roleplays)
       )
-      (get roleplays)
     )
     (map
       (get ratings)

@@ -33,6 +33,8 @@ python spagett_it.py your_query_file.🍝
 | `limit`       | `max-rows`, `sub-expression`        | `(limit 10 (get users))`                             | Limits the number of returned results from the sub-expression to max-rows.   |
 
 ### 🧱 Formatters
+| **Operator** | **Args**                        | **Example**                             | **What It Does**                          |
+| ------------ | ------------------------------- | --------------------------------------- | ----------------------------------------- |
 | `list`       | `field1`, `field2`, ..., or `*` | `(list user_id completed)`  | Selects specific fields. Use `*` for all. |
 
 ### 📊 Aggregations

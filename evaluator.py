@@ -1,5 +1,6 @@
 import operator
 
+# TODO: "as" operator
 
 def aggregate_op(expr, context, mode):
     ops_for = [expr[1]] if isinstance(expr[1], str) else eval_expr(expr[1], context)
@@ -27,7 +28,7 @@ def aggregate_op(expr, context, mode):
     output = []
     for keys, value in result.items():
         combined = {op_for: key_part for op_for, key_part in zip(ops_for, keys)}
-        combined[f"{mode} {op_on}"] = value
+        combined[f"{mode}-{op_on}"] = value
         output.append(combined)
 
     return output

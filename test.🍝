@@ -1,5 +1,9 @@
 
 (descending
-  (list performance)
-  (get evaluations)
+  max-performance
+  (max
+    eid
+    performance
+    (get evaluations)
+  )
 )

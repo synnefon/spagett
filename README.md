@@ -28,14 +28,20 @@ python spagett_it.py your_query_file.🍝
 | `join`       | `condition`, `left`, `right`    | `(join (== user_id id) (get users) (get roleplays))` | Joins two tables on a condition.      |
 | `map`        | `sub-expression`, `format`      | `(map (get users) (list user_id name))` | Applies a format to each record.         |
 | `filter`      | `condition`, `sub-expression` | `(filter (> age 25) (get users))` | filters the sub expression by the condition, returning a subset of the sub expression's data|
+| `ascending`   | `field(s)`, `sub-expression`        | `(ascending (list age name) (get users))`            | Sorts the result of the sub-expression in ascending order by given field(s). |
+| `descending`  | `field(s)`, `sub-expression`        | `(descending (list age name) (get users))`           | Sorts the result of the sub-expression in descending order by given field(s). |
+| `limit`       | `max-rows`, `sub-expression`        | `(limit 10 (get users))`                             | Limits the number of returned results from the sub-expression to max-rows.   |
+
+### 🧱 Formatters
 | `list`       | `field1`, `field2`, ..., or `*` | `(list user_id completed)`  | Selects specific fields. Use `*` for all. |
 
 ### 📊 Aggregations
 | **Operator** | **Args**                      | **Example**                                     | **What It Does**                 |
 | ------------ | ----------------------------- | ----------------------------------------------- | -------------------------------- |
-| `sum`        | `group-by`, `field`, `sub-expression` | `(sum (list name) duration_seconds (join ...))` | Sums a field grouped by another. |
-| `max`        | `group-by`, `field`, `sub-expression` | `(max name duration_seconds (join ...))`        | Finds max value per group.       |
-| `min`        | `group-by`, `field`, `sub-expression` | `(min name duration_seconds (join ...))`        | Finds min value per group.       |
+| `sum`        | `group-by`, `group-on`, `sub-expression` | `(sum (list email roleplay_id) duration_seconds (join ...))` | Sums group-on field(s) for each distinct group-by field(s). |
+| `max`        | `group-on`, `group-on`, `sub-expression` | `(max name duration_seconds (join ...))`        | Finds max value of group-by field(s) for each distinct group-by field(s).       |
+| `min`        | `group-by`, `group-on`, `sub-expression` | `(min name duration_seconds (join ...))`        | Finds min value of group-on field(s) for each distinct group-by field(s).       |
+| `count`       | `group-by`, `sub-expression`        | `(count email (get users))`                          | Counts the number of records for each distinct value of the group-by field(s). |
 
 ### 🧮 Expressions
 | **Operator**         | **Args**              | **Example**                            | **What It Does**             |

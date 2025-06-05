@@ -14,13 +14,13 @@ data_sources = {
         {"oid": 105, "user_id": 3, "completed": False, "duration_seconds": 200},
     ],
     "evaluations": [
-        {"rid": 200, "roleplay_id": 100, "performance": 3},
-        {"rid": 201, "roleplay_id": 101, "performance": 9},
-        {"rid": 202, "roleplay_id": 102, "performance": 4},
-        {"rid": 203, "roleplay_id": 103, "performance": 10},
-        {"rid": 204, "roleplay_id": 104, "performance": 5},
-        {"rid": 205, "roleplay_id": 105, "performance": 6},
-        {"rid": 206, "roleplay_id": 105, "performance": 7},
-        {"rid": 207, "roleplay_id": 105, "performance": 1},
+        {"eid": 200, "roleplay_id": 100, "performance": 3},
+        {"eid": 201, "roleplay_id": 101, "performance": 9},
+        {"eid": 202, "roleplay_id": 102, "performance": 4},
+        {"eid": 203, "roleplay_id": 103, "performance": 10},
+        {"eid": 204, "roleplay_id": 104, "performance": 5},
+        {"eid": 205, "roleplay_id": 105, "performance": 6},
+        {"eid": 206, "roleplay_id": 105, "performance": 7},
+        {"eid": 207, "roleplay_id": 105, "performance": 1},
     ]
 }

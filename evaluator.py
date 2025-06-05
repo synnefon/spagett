@@ -2,6 +2,7 @@ import operator
 
 # TODO: "as" operator
 
+
 def aggregate_op(expr, context, mode):
     ops_for = [expr[1]] if isinstance(expr[1], str) else eval_expr(expr[1], context)
     op_on = expr[2]
@@ -156,15 +157,16 @@ op_funs = {
     "map": {"op": map_op, "arg_range": 2},
     "join": {"op": join_op, "arg_range": 3},
     "limit": {"op": limit_op, "arg_range": 2},
-    #
+    "ascending": {"op": make_order_op("asc"), "arg_range": 2},
+    "descending": {"op": make_order_op("desc"), "arg_range": 2},
+    # formatters
+    "filter": {"op": filter_op, "arg_range": 2},
+    # aggregators
     "count": {"op": count_op, "arg_range": 2},
     "sum": {"op": make_aggregate_op("sum"), "arg_range": 3},
     "max": {"op": make_aggregate_op("max"), "arg_range": 3},
     "min": {"op": make_aggregate_op("min"), "arg_range": 3},
     "avg": {"op": make_aggregate_op("avg"), "arg_range": 3},
-    "filter": {"op": filter_op, "arg_range": 2},
-    "ascending": {"op": make_order_op("asc"), "arg_range": 2},
-    "descending": {"op": make_order_op("desc"), "arg_range": 2},
     # pure operators
     "==": {"op": equals_op, "arg_range": 2},
     "!=": {"op": not_equals_op, "arg_range": 2},

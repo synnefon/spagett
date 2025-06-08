@@ -278,49 +278,49 @@ data_sources = {
       "eid": 9,
       "goal_id": 1,
       "user_id": 1,
-      "score": 3
+      "score": 5
     },
     {
       "eid": 10,
       "goal_id": 1,
       "user_id": 1,
-      "score": 3
+      "score": 5
     },
     {
       "eid": 11,
       "goal_id": 2,
       "user_id": 1,
-      "score": 2
+      "score": 6
     },
     {
       "eid": 12,
       "goal_id": 2,
       "user_id": 1,
-      "score": 3
+      "score": 8
     },
     {
       "eid": 13,
       "goal_id": 3,
       "user_id": 1,
-      "score": 6
+      "score": 4
     },
     {
       "eid": 14,
       "goal_id": 3,
       "user_id": 1,
-      "score": 4
+      "score": 2
     },
     {
       "eid": 15,
       "goal_id": 4,
       "user_id": 1,
-      "score": 6
+      "score": 1
     },
     {
       "eid": 16,
       "goal_id": 4,
       "user_id": 1,
-      "score": 5
+      "score": 2
     },
     {
       "eid": 17,
@@ -386,49 +386,49 @@ data_sources = {
       "eid": 27,
       "goal_id": 1,
       "user_id": 2,
-      "score": 3
+      "score": 8
     },
     {
       "eid": 28,
       "goal_id": 1,
       "user_id": 2,
-      "score": 2
+      "score": 6
     },
     {
       "eid": 29,
       "goal_id": 2,
       "user_id": 2,
-      "score": 2
+      "score": 6
     },
     {
       "eid": 30,
       "goal_id": 2,
       "user_id": 2,
-      "score": 2
+      "score": 6
     },
     {
       "eid": 31,
       "goal_id": 3,
       "user_id": 2,
-      "score": 6
+      "score": 3
     },
     {
       "eid": 32,
       "goal_id": 3,
       "user_id": 2,
-      "score": 2
+      "score": 1
     },
     {
       "eid": 33,
       "goal_id": 4,
       "user_id": 2,
-      "score": 5
+      "score": 2
     },
     {
       "eid": 34,
       "goal_id": 4,
       "user_id": 2,
-      "score": 6
+      "score": 1
     },
     {
       "eid": 35,
@@ -674,37 +674,37 @@ data_sources = {
       "eid": 75,
       "goal_id": 1,
       "user_id": 3,
-      "score": 5
+      "score": 8
     },
     {
       "eid": 76,
       "goal_id": 1,
       "user_id": 3,
-      "score": 5
+      "score": 8
     },
     {
       "eid": 77,
       "goal_id": 2,
       "user_id": 3,
-      "score": 3
+      "score": 8
     },
     {
       "eid": 78,
       "goal_id": 2,
       "user_id": 3,
-      "score": 3
+      "score": 9
     },
     {
       "eid": 79,
       "goal_id": 3,
       "user_id": 3,
-      "score": 3
+      "score": 1
     },
     {
       "eid": 80,
       "goal_id": 3,
       "user_id": 3,
-      "score": 2
+      "score": 1
     },
     {
       "eid": 81,
@@ -1058,25 +1058,25 @@ data_sources = {
       "eid": 139,
       "goal_id": 1,
       "user_id": 6,
-      "score": 4
+      "score": 9
     },
     {
       "eid": 140,
       "goal_id": 1,
       "user_id": 6,
-      "score": 2
+      "score": 6
     },
     {
       "eid": 141,
       "goal_id": 2,
       "user_id": 6,
-      "score": 2
+      "score": 6
     },
     {
       "eid": 142,
       "goal_id": 2,
       "user_id": 6,
-      "score": 5
+      "score": 10
     },
     {
       "eid": 143,
@@ -1088,7 +1088,7 @@ data_sources = {
       "eid": 144,
       "goal_id": 3,
       "user_id": 6,
-      "score": 6
+      "score": 1
     },
     {
       "eid": 145,
@@ -1298,37 +1298,37 @@ data_sources = {
       "eid": 179,
       "goal_id": 1,
       "user_id": 9,
-      "score": 5
+      "score": 8
     },
     {
       "eid": 180,
       "goal_id": 1,
       "user_id": 9,
-      "score": 5
+      "score": 8
     },
     {
       "eid": 181,
       "goal_id": 2,
       "user_id": 9,
-      "score": 5
+      "score": 10
     },
     {
       "eid": 182,
       "goal_id": 2,
       "user_id": 9,
-      "score": 4
+      "score": 9
     },
     {
       "eid": 183,
       "goal_id": 3,
       "user_id": 9,
-      "score": 5
+      "score": 3
     },
     {
       "eid": 184,
       "goal_id": 3,
       "user_id": 9,
-      "score": 5
+      "score": 2
     },
     {
       "eid": 185,
@@ -1598,31 +1598,31 @@ data_sources = {
       "eid": 229,
       "goal_id": 1,
       "user_id": 11,
-      "score": 3
+      "score": 6
     },
     {
       "eid": 230,
       "goal_id": 1,
       "user_id": 11,
-      "score": 4
+      "score": 7
     },
     {
       "eid": 231,
       "goal_id": 2,
       "user_id": 11,
-      "score": 4
+      "score": 9
     },
     {
       "eid": 232,
       "goal_id": 2,
       "user_id": 11,
-      "score": 2
+      "score": 7
     },
     {
       "eid": 233,
       "goal_id": 3,
       "user_id": 11,
-      "score": 4
+      "score": 2
     },
     {
       "eid": 234,
@@ -1634,7 +1634,7 @@ data_sources = {
       "eid": 235,
       "goal_id": 4,
       "user_id": 11,
-      "score": 5
+      "score": 3
     },
     {
       "eid": 236,
@@ -2054,25 +2054,25 @@ data_sources = {
       "eid": 305,
       "goal_id": 1,
       "user_id": 13,
-      "score": 6
+      "score": 9
     },
     {
       "eid": 306,
       "goal_id": 1,
       "user_id": 13,
-      "score": 2
+      "score": 6
     },
     {
       "eid": 307,
       "goal_id": 2,
       "user_id": 13,
-      "score": 5
+      "score": 10
     },
     {
       "eid": 308,
       "goal_id": 2,
       "user_id": 13,
-      "score": 3
+      "score": 8
     },
     {
       "eid": 309,
@@ -2084,7 +2084,7 @@ data_sources = {
       "eid": 310,
       "goal_id": 3,
       "user_id": 13,
-      "score": 4
+      "score": 2
     },
     {
       "eid": 311,
@@ -2438,13 +2438,13 @@ data_sources = {
       "eid": 369,
       "goal_id": 1,
       "user_id": 15,
-      "score": 3
+      "score": 10
     },
     {
       "eid": 370,
       "goal_id": 1,
       "user_id": 15,
-      "score": 3
+      "score": 10
     },
     {
       "eid": 371,
@@ -2474,13 +2474,13 @@ data_sources = {
       "eid": 375,
       "goal_id": 4,
       "user_id": 15,
-      "score": 5
+      "score": 2
     },
     {
       "eid": 376,
       "goal_id": 4,
       "user_id": 15,
-      "score": 5
+      "score": 3
     },
     {
       "eid": 377,

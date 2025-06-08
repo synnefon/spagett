@@ -2,10 +2,10 @@
 (
   limit 50
   (descending
-    performance
+    (list score duration_seconds)
     (avg
       (list user_id name)
-      performance
+      (list score duration_seconds)
       (join
         (== uid user_id)
         (get users)

@@ -2,51 +2,75 @@ import operator
 
 # TODO: "as" operator
 
+def validate_keys(row, required_keys):
+    missing = [k for k in required_keys if k not in row]
+    if missing:
+        raise Exception(f"Missing key(s) {missing} in record: {row}")
+    return True
+
+
+def validate_types(method, obj, types):
+    if not isinstance(obj, types):
+        raise Exception(f"ERROR: {method} expects [{types}]. instead got: {obj}\n")
+
+
+def resolve_ids(raw, context):
+    return {raw: raw} if isinstance(raw, str) else eval_expr(raw, context)
+
+
+def compute_aggregate(val, current, mode):
+    if mode == "max":
+        return val if current is None else max(current, val)
+    elif mode == "min":
+        return val if current is None else min(current, val)
+    elif mode in {"sum", "avg"}:
+        return (current or 0) + val
+    elif mode == "count":
+        return (current or 0) + 1
+    raise Exception(f"Unknown mode: {mode}")
+
 
 def aggregate_op(expr, context, mode):
-    ops_for = [expr[1]] if isinstance(expr[1], str) else eval_expr(expr[1], context)
-    op_on = expr[2]
+    group_ids = resolve_ids(expr[1], context)
+    aggregate_ids = resolve_ids(expr[2], context)
     data = eval_expr(expr[3], context)
+
     result = {}
-    counts = {}
+    counts = {} if mode == "avg" else None
+    numeric_modes = {"sum", "avg", "max", "min"}
 
     for d in data:
-        key = tuple(d[op_for] for op_for in ops_for)
+        validate_keys(d, set(group_ids) | set(aggregate_ids))
+        key = tuple(d[k] for k in group_ids)
+        result.setdefault(key, {})
+        if mode == "avg":
+            counts.setdefault(key, {})
 
-        if mode in {"sum", "avg", "max", "min"} and not isinstance(
-            d[op_on], (float, int)
-        ):
-            raise Exception(f"{op_on} must be numeric for use in {mode} function")
+        for source, alias in aggregate_ids.items():
+            val = d[source]
+            if mode in numeric_modes:
+                validate_types(mode, val, (int, float))
 
-        val = d.get(op_on, 1)
+            current = result[key].get(alias)
+            result[key][alias] = compute_aggregate(val, current, mode)
 
-        if mode == "max":
-            result[key] = max(result.get(key, val - 1), val)
-        elif mode == "min":
-            result[key] = min(result.get(key, val + 1), val)
-        elif mode in {"sum", "avg"}:
-            result[key] = result.get(key, 0) + val
-            counts[key] = counts.get(key, 0) + 1
-        elif mode == "count":
-            result[key] = result.get(key, 0) + 1
-        else:
-            raise Exception(f"Unknown mode: {mode}")
+            if mode == "avg":
+                counts[key][alias] = counts[key].get(alias, 0) + 1
 
-    if mode == "avg":
-        for key in result:
-            result[key] /= counts[key]
+    output = []
+    for key, values in result.items():
+        if mode == "avg":
+            for alias in values:
+                values[alias] /= counts[key][alias]
+        row = {alias: key[i] for i, alias in enumerate(group_ids.values())}
+        row.update(values)
+        output.append(row)
 
-    return [
-        {
-            **{op_for: k for op_for, k in zip(ops_for, key)},
-            (op_on if mode != "count" else "count"): val,
-        }
-        for key, val in result.items()
-    ]
+    return output
 
 
 def count_op(expr, context):
-    dummy_expr = expr[:2] + [""] + [expr[2]]
+    dummy_expr = [expr[0], expr[1], "", expr[2]]
     return aggregate_op(dummy_expr, context, "count")
 
 
@@ -55,19 +79,26 @@ def make_aggregate_op(mode):
 
 
 def list_op(expr, context):
-    if not isinstance(context, dict):
-        raise Exception("ERROR: filter expects a dict. instead got: \n" + str(context))
-    members = context.keys() if expr[1] == "*" else expr[1:]
-    return {str(m): eval_expr(m, context) for m in members}
+    validate_types("list", context, (dict))
+    context_keys = context.keys() if expr[1] == "*" else expr[1:]
+    return {str(k): eval_expr(k, context) for k in context_keys}
 
 
 def map_op(expr, context):
     data = eval_expr(expr[1], context)
-    if not isinstance(data, list):
-        raise Exception("map expects a list. instead got: \n" + str(data))
-    format = expr[2]
-    formatted = [eval_expr(format, row) for row in data]
-    return [f for f in formatted if f is not None]
+    validate_types("map", data, (list))
+
+    format_expr = expr[2]
+    required_keys = set(format_expr[1:])
+
+    output = []
+    for row in data:
+        validate_keys(row, required_keys)
+        result = eval_expr(format_expr, row)
+        if result is not None:
+            output.append(result)
+
+    return output
 
 
 def make_order_op(type):
@@ -79,8 +110,11 @@ def make_order_op(type):
 
         reverse = type == "desc"
 
+        for row in data:
+            validate_keys(row, order_by)
+
         try:
-            data.sort(key=lambda x: tuple(x.get(k) for k in order_by), reverse=reverse)
+            data.sort(key=lambda x: tuple(x[k] for k in order_by), reverse=reverse)
             return data
         except Exception as e:
             raise Exception(f"ERROR: failed to order by {order_by} ({type}): {e}")

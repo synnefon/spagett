@@ -1,20 +1,20 @@
-
-(
-  limit 50
-  (descending
-    (list score duration_seconds)
-    (avg
-      (list user_id name)
-      (list score duration_seconds)
+(avg
+  (list roleplay_id roleplay_name)
+  score
+  (map
+    (join
+      (== roleplay_id rid)
+      (get roleplays)
       (join
-        (== uid user_id)
-        (get users)
+        (== gid goal_id)
+        (get goals)
         (join
-          (== rid roleplay_id)
-          (get roleplays)
+          (== user_id uid)
+          (get users)
           (get evaluations)
         )
       )
-    )
+    )    
+    (list roleplay_name roleplay_id user_name score)
   )
 )
